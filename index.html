@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Diario Clorox</title>
+<style>
+:root {
+  color-scheme: light;
+  --navy: #1C2B3A;
+  --navy-light: #2b3f54;
+  --accent: #3ab6a8;
+  --accent-dark: #2c9184;
+  --green: #1a8a4c;
+  --amber: #b3720b;
+  --red: #c8341f;
+  --gray: #8b93a3;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 0; background: #f2f4f6; color: #1a1d23;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px 32px; }
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: #fff; padding: 28px 24px 34px; margin-bottom: -18px;
+}
+.hero-inner { max-width: 1180px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px; }
+.hero-title { display: flex; align-items: center; gap: 12px; }
+.hero-logo {
+  width: 40px; height: 40px; border-radius: 10px; background: var(--accent);
+  display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; color: #0d221e;
+  flex-shrink: 0;
+}
+h1 { font-size: 21px; margin: 0; font-weight: 700; letter-spacing: -0.01em; }
+.eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: #9fb0c3; margin-bottom: 2px; }
+.subtitle { color: #b8c4d1; font-size: 12.5px; margin-top: 4px; }
+input#search {
+  padding: 9px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.18);
+  font-size: 13px; width: 220px; background: rgba(255,255,255,0.08); color: #fff;
+}
+input#search::placeholder { color: #9fb0c3; }
+input#search:focus { outline: none; border-color: var(--accent); background: rgba(255,255,255,0.14); }
+.content { position: relative; padding-top: 22px; }
+.warn-banner { background: #fff6e5; border: 1px solid #f2ddab; color: #7a5a10; border-radius: 8px; padding: 10px 14px; font-size: 12.5px; margin-bottom: 18px; }
+.grid-top { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.card { background: #fff; border-radius: 12px; padding: 16px 18px; box-shadow: 0 2px 8px rgba(28,43,58,0.07); border: 1px solid #eceef2; border-top: 3px solid var(--gray); }
+.card.st-green { border-top-color: var(--green); }
+.card.st-amber { border-top-color: var(--amber); }
+.card.st-red { border-top-color: var(--red); }
+.card .label { font-size: 11.5px; color: #767a82; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; font-weight: 600; }
+.card .value { font-size: 23px; font-weight: 800; color: var(--navy); }
+.card .value.green { color: var(--green); }
+.card .value.red { color: var(--red); }
+.card .value.amber { color: var(--amber); }
+.main-row { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; margin-bottom: 20px; }
+@media (max-width: 800px) { .main-row { grid-template-columns: 1fr; } .hero-inner { align-items: flex-start; } input#search { width: 100%; } }
+.panel { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(28,43,58,0.07); border: 1px solid #eceef2; }
+.panel h2 { font-size: 14px; margin: 0 0 14px 0; color: var(--navy); font-weight: 700; }
+.clock-wrap { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
+.clock-num { text-align: center; }
+.clock-num .n { font-size: 38px; font-weight: 800; line-height: 1; color: var(--navy); }
+.clock-num .l { font-size: 11.5px; color: #767a82; margin-top: 6px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 9px 10px; color: #767a82; font-weight: 700; font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 2px solid #eef0f3; cursor: pointer; user-select: none; }
+th:hover { color: var(--navy); }
+td { padding: 11px 10px; border-bottom: 1px solid #f1f2f4; vertical-align: middle; }
+tr.vendor-row { cursor: pointer; transition: background .1s; }
+tr.vendor-row:hover { background: #f6f8fa; }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; }
+.dot.green { background: var(--green); } .dot.amber { background: var(--amber); } .dot.red { background: var(--red); } .dot.gray { background: #b7bcc4; }
+.chev { display: inline-block; transition: transform .15s; color: #b0b6bf; }
+.chev.open { transform: rotate(90deg); color: var(--accent-dark); }
+.detail-row td { background: #f8fafb; padding: 0; }
+.detail-inner { padding: 16px 20px 20px 20px; display: none; border-left: 3px solid var(--accent); }
+.detail-inner.open { display: block; }
+.detail-inner table { margin-top: 8px; }
+.detail-inner th, .detail-inner td { font-size: 12.5px; }
+.help-box { background: #eef6ff; border: 1px solid #d7e8fb; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 10px; }
+.help-box.ok { background: #eafaf0; border-color: #cdeedc; }
+.help-box.warn { background: #fff6e5; border-color: #f2ddab; }
+.right { text-align: right; }
+.mono { font-variant-numeric: tabular-nums; }
+.tag { display: inline-block; font-size: 11px; color: #767a82; background: #f1f2f4; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
+.pill { font-size: 10.5px; padding: 2px 8px; border-radius: 10px; background: #eef1f4; color: #56606c; margin-left: 6px; font-weight: 600; }
+footer { text-align: center; color: #9aa0a8; font-size: 11px; margin-top: 28px; }
+.catbar { display: flex; justify-content: space-between; font-size: 12px; margin: 4px 0 2px 0; }
+.catbar-bg { background: #eef0f3; border-radius: 6px; height: 8px; overflow: hidden; margin-bottom: 8px; }
+.catbar-fill { height: 100%; background: var(--accent); }
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-title">
+      <div class="hero-logo">C</div>
+      <div>
+        <div class="eyebrow">Panel de ventas · Grupo Ayudín / Clorox</div>
+        <h1>Reporte Diario de Ventas</h1>
+        <div class="subtitle" id="subtitle"></div>
+      </div>
+    </div>
+    <input id="search" type="text" placeholder="Buscar vendedor...">
+  </div>
+</div>
+<div class="wrap content">
+  <div id="warnBanner"></div>
+
+  <div class="grid-top" id="kpis"></div>
+
+  <div class="main-row">
+    <div class="panel">
+      <h2>Objetivo vs Real vs Estimado a cierre (en pesos)</h2>
+      <div id="bars"></div>
+    </div>
+    <div class="panel">
+      <h2>Días hábiles restantes del mes</h2>
+      <div class="clock-wrap" id="clock"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Ranking de vendedores</h2>
+    <table>
+      <thead>
+        <tr>
+          <th data-k="ranking">#</th>
+          <th data-k="nombre">Vendedor</th>
+          <th class="right" data-k="objetivo">Objetivo</th>
+          <th class="right" data-k="real">Real</th>
+          <th class="right" data-k="avance">Avance %</th>
+          <th class="right" data-k="desviacion">Desviación</th>
+          <th class="right" data-k="clientes">Clientes con compra</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <footer id="footer"></footer>
+</div>
+
+<script id="report-data" type="application/json">{
+  "generado": "2026-07-30T15:58:07.604966",
+  "proveedor": "Clorox",
+  "periodo": "July 2026",
+  "fuente_ventas": "ventas-Detallado de ventas extendido-30072026.csv",
+  "fecha_datos_al": "2026-07-30",
+  "dias_habiles_restantes": 2,
+  "dias_habiles_totales": 23,
+  "dias_habiles_transcurridos": 22,
+  "vendedores_sin_objetivo": [
+    "Sabrina Pereyra",
+    "Samanta Digliotti",
+    "Nadia Diaz",
+    "Camila Navarrete",
+    "Martin Di Giorno",
+    "Oriana Sorgini",
+    "VENDEDOR MAYORISTA",
+    "Gian Franco Provenza",
+    "GUILLERMO ZEBALLOS"
+  ],
+  "totales": {
+    "objetivo": 213875047.87690416,
+    "real": 128495872.03,
+    "estimado_cierre": 134336593.4859091,
+    "avance_pct": 0.6007987996054399,
+    "clientes_con_compra": 992
+  },
+  "vendedores": [
+    {
+      "codigo": "55",
+      "nombre": "Nieves Alegre",
+      "supervisor": "Bruno Centurion",
+      "objetivo": 14520660.457068818,
+      "real": 8450303.289999992,
+      "tendencia_cierre": 8834407.98499999,
+      "avance_pct": 0.5819503399989145,
+      "desviacion_pct": -0.41804966000108545,
+      "promedio_diario": 384104.6949999996,
+      "media_necesaria": 3035178.583534413,
+      "clientes_con_compra": 71,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 5513669.06
+        },
+        {
+          "categoria": "PISO",
+          "real": 1379773.09
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 571696.1400000001
+        },
+        {
+          "categoria": "COCINA",
+          "real": 281580.36000000004
+        },
+        {
+          "categoria": "OTROS LIMPIADORES",
+          "real": 277477.19
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 131915.25
+        },
+        {
+          "categoria": "AERO AYUDIN",
+          "real": 110558.0
+        },
+        {
+          "categoria": "BAÑO",
+          "real": 103229.69
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 80404.51
+        }
+      ],
+      "objetivo_titular_excel": "NIEVES ALEGRE",
+      "titular_cambio": false,
+      "ranking": 1
+    },
+    {
+      "codigo": "52",
+      "nombre": "Nicole Sosa",
+      "supervisor": "Bruno Centurion",
+      "objetivo": 16483081.766870713,
+      "real": 9513376.380000008,
+      "tendencia_cierre": 9945802.579090917,
+      "avance_pct": 0.5771600550523817,
+      "desviacion_pct": -0.42283994494761834,
+      "promedio_diario": 432426.19909090945,
+      "media_necesaria": 3484852.6934353523,
+      "clientes_con_compra": 53,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 4115609.940000005
+        },
+        {
+          "categoria": "PISO",
+          "real": 1863683.5599999991
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 1227005.8900000001
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 1137475.47
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 373985.35
+        },
+        {
+          "categoria": "OTROS LIMPIADORES",
+          "real": 283677.97000000003
+        },
+        {
+          "categoria": "COCINA",
+          "real": 259395.25000000003
+        },
+        {
+          "categoria": "BAÑO",
+          "real": 217156.74000000005
+        },
+        {
+          "categoria": "AERO AYUDIN",
+          "real": 35386.21
+        }
+      ],
+      "objetivo_titular_excel": "EZEQUIEL VALENTE",
+      "titular_cambio": true,
+      "ranking": 2
+    },
+    {
+      "codigo": "54",
+      "nombre": "Leonel Caruso",
+      "supervisor": "Bruno Centurion",
+      "objetivo": 16540485.00997553,
+      "real": 9485964.919999996,
+      "tendencia_cierre": 9917145.143636359,
+      "avance_pct": 0.5734998045268341,
+      "desviacion_pct": -0.42650019547316587,
+      "promedio_diario": 431180.22363636346,
+      "media_necesaria": 3527260.044987767,
+      "clientes_con_compra": 75,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 5138647.070000004
+        },
+        {
+          "categoria": "PISO",
+          "real": 2144781.6999999993
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 1102519.95
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 487158.48999999976
+        },
+        {
+          "categoria": "OTROS LIMPIADORES",
+          "real": 279742.3
+        },
+        {
+          "categoria": "BAÑO",
+          "real": 149079.35
+        },
+        {
+          "categoria": "COCINA",
+          "real": 98081.59
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 50568.26
+        },
+        {
+          "categoria": "AERO AYUDIN",
+          "real": 35386.21
+        }
+      ],
+      "objetivo_titular_excel": "LEONEL CARUZO",
+      "titular_cambio": true,
+      "ranking": 3
+    },
+    {
+      "codigo": "73",
+      "nombre": "Florencia Cubilla",
+      "supervisor": "Bruno Centurion",
+      "objetivo": 16553267.680164026,
+      "real": 8716388.369999994,
+      "tendencia_cierre": 9112587.84136363,
+      "avance_pct": 0.5265660254165372,
+      "desviacion_pct": -0.4734339745834628,
+      "promedio_diario": 396199.4713636361,
+      "media_necesaria": 3918439.6550820163,
+      "clientes_con_compra": 73,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 3976731.5800000033
+        },
+        {
+          "categoria": "PISO",
+          "real": 2256634.5799999996
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 802787.4200000005
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 622627.9299999998
+        },
+        {
+          "categoria": "BAÑO",
+          "real": 412828.18
+        },
+        {
+          "categoria": "OTROS LIMPIADORES",
+          "real": 273431.11
+        },
+        {
+          "categoria": "COCINA",
+          "real": 159876.59999999998
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 145064.62
+        },
+        {
+          "categoria": "SELTON",
+          "real": 66406.35
+        }
+      ],
+      "objetivo_titular_excel": "FLORENCIA CUBILLA",
+      "titular_cambio": false,
+      "ranking": 4
+    },
+    {
+      "codigo": "75",
+      "nombre": "Julieta Yegros",
+      "supervisor": "Bruno Centurion",
+      "objetivo": 17533549.89303336,
+      "real": 8625544.839999987,
+      "tendencia_cierre": 9017615.059999986,
+      "avance_pct": 0.4919451504470975,
+      "desviacion_pct": -0.5080548495529025,
+      "promedio_diario": 392070.2199999994,
+      "media_necesaria": 4454002.526516686,
+      "clientes_con_compra": 71,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 5336274.270000001
+        },
+        {
+          "categoria": "PISO",
+          "real": 1509920.67
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 996163.9900000001
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 400459.0999999999
+        },
+        {
+          "categoria": "BAÑO",
+          "real": 216400.74
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 72379.57999999999
+        },
+        {
+          "categoria": "COCINA",
+          "real": 59639.36
+        },
+        {
+          "categoria": "OTROS LIMPIADORES",
+          "real": 21037.3
+        },
+        {
+          "categoria": "AERO AYUDIN",
+          "real": 13269.83
+        }
+      ],
+      "objetivo_titular_excel": "JULIETA YEGROS",
+      "titular_cambio": false,
+      "ranking": 5
+    },
+    {
+      "codigo": "64",
+      "nombre": "Karina Fernandez",
+      "supervisor": "Bruno Centurion",
+      "objetivo": 17472899.120792642,
+      "real": 8266003.490000007,
+      "tendencia_cierre": 8641730.921363644,
+      "avance_pct": 0.47307567180786353,
+      "desviacion_pct": -0.5269243281921365,
+      "promedio_diario": 375727.4313636367,
+      "media_necesaria": 4603447.815396318,
+      "clientes_con_compra": 70,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 5664671.530000001
+        },
+        {
+          "categoria": "PISO",
+          "real": 1024602.7600000002
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 864886.3800000001
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 484719.2799999999
+        },
+        {
+          "categoria": "OTROS LIMPIADORES",
+          "real": 136009.13
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 46952.91
+        },
+        {
+          "categoria": "COCINA",
+          "real": 32693.86
+        },
+        {
+          "categoria": "BAÑO",
+          "real": 11467.64
+        }
+      ],
+      "objetivo_titular_excel": "KARINA FERNANDEZ",
+      "titular_cambio": false,
+      "ranking": 6
+    },
+    {
+      "codigo": "56",
+      "nombre": "Ezequiel Ferreira",
+      "supervisor": "Bruno Centurion",
+      "objetivo": 15191722.621846898,
+      "real": 6835518.869999989,
+      "tendencia_cierre": 7146224.273181806,
+      "avance_pct": 0.4499502156634938,
+      "desviacion_pct": -0.5500497843365062,
+      "promedio_diario": 310705.4031818177,
+      "media_necesaria": 4178101.8759234543,
+      "clientes_con_compra": 79,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 3772826.120000005
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 1362247.3400000003
+        },
+        {
+          "categoria": "PISO",
+          "real": 985111.7400000009
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 242921.98000000004
+        },
+        {
+          "categoria": "COCINA",
+          "real": 165984.22
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 154764.34
+        },
+        {
+          "categoria": "BAÑO",
+          "real": 79805.83
+        },
+        {
+          "categoria": "OTROS LIMPIADORES",
+          "real": 55255.71000000001
+        },
+        {
+          "categoria": "SELTON",
+          "real": 16601.59
+        }
+      ],
+      "objetivo_titular_excel": "EZEQUIEL FERREIRA",
+      "titular_cambio": false,
+      "ranking": 7
+    },
+    {
+      "codigo": "53",
+      "nombre": "Verona Abati",
+      "supervisor": "Bruno Centurion",
+      "objetivo": 17051215.33080606,
+      "real": 7648107.370000011,
+      "tendencia_cierre": 7995748.614090921,
+      "avance_pct": 0.4485373752909179,
+      "desviacion_pct": -0.5514626247090821,
+      "promedio_diario": 347641.2440909096,
+      "media_necesaria": 4701553.980403025,
+      "clientes_con_compra": 71,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 3777758.710000002
+        },
+        {
+          "categoria": "PISO",
+          "real": 1592580.5400000012
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 969584.6
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 543415.0199999999
+        },
+        {
+          "categoria": "COCINA",
+          "real": 257329.43
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 191759.04
+        },
+        {
+          "categoria": "BAÑO",
+          "real": 164369.54
+        },
+        {
+          "categoria": "AERO AYUDIN",
+          "real": 81941.19
+        },
+        {
+          "categoria": "OTROS LIMPIADORES",
+          "real": 69369.3
+        }
+      ],
+      "objetivo_titular_excel": "MICAELA CASAS",
+      "titular_cambio": true,
+      "ranking": 8
+    },
+    {
+      "codigo": "74",
+      "nombre": "Romina Baez",
+      "supervisor": "Bruno Centurion",
+      "objetivo": 15816392.264391439,
+      "real": 5953783.729999995,
+      "tendencia_cierre": 6224410.263181813,
+      "avance_pct": 0.37643121329281704,
+      "desviacion_pct": -0.623568786707183,
+      "promedio_diario": 270626.53318181797,
+      "media_necesaria": 4931304.267195722,
+      "clientes_con_compra": 58,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 3106984.6200000006
+        },
+        {
+          "categoria": "PISO",
+          "real": 1773990.4100000001
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 459278.46
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 390731.19
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 134624.72999999998
+        },
+        {
+          "categoria": "OTROS LIMPIADORES",
+          "real": 46694.31
+        },
+        {
+          "categoria": "BAÑO",
+          "real": 30701.809999999998
+        },
+        {
+          "categoria": "COCINA",
+          "real": 10778.2
+        }
+      ],
+      "objetivo_titular_excel": "ROMINA BAEZ",
+      "titular_cambio": false,
+      "ranking": 9
+    },
+    {
+      "codigo": "63",
+      "nombre": "Daniel Martin",
+      "supervisor": "Bruno Centurion",
+      "objetivo": 15169089.268734092,
+      "real": 5395313.920000003,
+      "tendencia_cierre": 5640555.461818185,
+      "avance_pct": 0.3556781705491445,
+      "desviacion_pct": -0.6443218294508555,
+      "promedio_diario": 245241.54181818196,
+      "media_necesaria": 4886887.674367044,
+      "clientes_con_compra": 61,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 4097154.0699999994
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 666350.9299999991
+        },
+        {
+          "categoria": "PISO",
+          "real": 395419.2199999999
+        },
+        {
+          "categoria": "OTROS LIMPIADORES",
+          "real": 97613.07999999999
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 72818.98
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 65957.64
+        }
+      ],
+      "objetivo_titular_excel": "DANIEL MARTIN ",
+      "titular_cambio": false,
+      "ranking": 10
+    },
+    {
+      "codigo": "62",
+      "nombre": "Nahuel Martinez",
+      "supervisor": "Bruno Centurion",
+      "objetivo": 18607807.245531723,
+      "real": 5393934.280000007,
+      "tendencia_cierre": 5639113.110909098,
+      "avance_pct": 0.2898747933502615,
+      "desviacion_pct": -0.7101252066497385,
+      "promedio_diario": 245178.83090909122,
+      "media_necesaria": 6606936.482765858,
+      "clientes_con_compra": 60,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 3057774.710000002
+        },
+        {
+          "categoria": "PISO",
+          "real": 952261.8400000002
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 612001.6800000003
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 347935.10999999987
+        },
+        {
+          "categoria": "BAÑO",
+          "real": 237268.49
+        },
+        {
+          "categoria": "OTROS LIMPIADORES",
+          "real": 136742.44999999998
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 49950.00000000001
+        }
+      ],
+      "objetivo_titular_excel": "NAHUEL MARTINEZ",
+      "titular_cambio": false,
+      "ranking": 11
+    },
+    {
+      "codigo": "51",
+      "nombre": "Ezequiel Valente",
+      "supervisor": "Bruno Centurion",
+      "objetivo": 23063230.0525873,
+      "real": 6324229.980000003,
+      "tendencia_cierre": 6611694.979090913,
+      "avance_pct": 0.2742126738353604,
+      "desviacion_pct": -0.7257873261646396,
+      "promedio_diario": 287464.99909090926,
+      "media_necesaria": 8369500.036293648,
+      "clientes_con_compra": 49,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 2710673.6100000036
+        },
+        {
+          "categoria": "PISO",
+          "real": 2097684.2900000005
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 588474.22
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 418336.59
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 383487.56
+        },
+        {
+          "categoria": "COCINA",
+          "real": 66178.12999999999
+        },
+        {
+          "categoria": "BAÑO",
+          "real": 59395.58
+        }
+      ],
+      "objetivo_titular_excel": "MARTIN DI GIORNO",
+      "titular_cambio": true,
+      "ranking": 12
+    },
+    {
+      "codigo": "61",
+      "nombre": "Abigail Fernandez",
+      "supervisor": "Bruno Centurion",
+      "objetivo": 9871647.16510152,
+      "real": 801923.2799999996,
+      "tendencia_cierre": 838374.3381818177,
+      "avance_pct": 0.08123500228360851,
+      "desviacion_pct": -0.9187649977163915,
+      "promedio_diario": 36451.05818181816,
+      "media_necesaria": 4534861.942550761,
+      "clientes_con_compra": 21,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 421836.4500000001
+        },
+        {
+          "categoria": "PISO",
+          "real": 219730.73000000004
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 112246.01000000001
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 48110.09
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 0.0
+        }
+      ],
+      "objetivo_titular_excel": "FLORENCIA CARO",
+      "titular_cambio": true,
+      "ranking": 13
+    },
+    {
+      "codigo": "26",
+      "nombre": "Sabrina Pereyra",
+      "supervisor": "JOHANA VIGIL",
+      "objetivo": null,
+      "real": 4920985.020000008,
+      "tendencia_cierre": 5144666.157272736,
+      "avance_pct": null,
+      "desviacion_pct": null,
+      "promedio_diario": 223681.13727272765,
+      "media_necesaria": null,
+      "clientes_con_compra": 37,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 3339315.160000004
+        },
+        {
+          "categoria": "PISO",
+          "real": 820394.1800000003
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 397057.0200000001
+        },
+        {
+          "categoria": "OTROS LIMPIADORES",
+          "real": 126223.81
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 118698.69
+        },
+        {
+          "categoria": "BAÑO",
+          "real": 66530.35
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 52765.810000000005
+        }
+      ],
+      "objetivo_titular_excel": null,
+      "titular_cambio": false,
+      "ranking": 14
+    },
+    {
+      "codigo": "27",
+      "nombre": "Samanta Digliotti",
+      "supervisor": "JOHANA VIGIL",
+      "objetivo": null,
+      "real": 1330894.5899999999,
+      "tendencia_cierre": 1391389.7986363634,
+      "avance_pct": null,
+      "desviacion_pct": null,
+      "promedio_diario": 60495.208636363626,
+      "media_necesaria": null,
+      "clientes_con_compra": 20,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 906162.2799999999
+        },
+        {
+          "categoria": "PISO",
+          "real": 178546.41
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 132367.96000000002
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 62400.8
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 51417.14
+        }
+      ],
+      "objetivo_titular_excel": null,
+      "titular_cambio": false,
+      "ranking": 15
+    },
+    {
+      "codigo": "28",
+      "nombre": "Nadia Diaz",
+      "supervisor": "JOHANA VIGIL",
+      "objetivo": null,
+      "real": 3676185.680000001,
+      "tendencia_cierre": 3843285.02909091,
+      "avance_pct": null,
+      "desviacion_pct": null,
+      "promedio_diario": 167099.34909090915,
+      "media_necesaria": null,
+      "clientes_con_compra": 41,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 2023951.0699999998
+        },
+        {
+          "categoria": "PISO",
+          "real": 731434.4499999997
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 563582.0700000001
+        },
+        {
+          "categoria": "BAÑO",
+          "real": 191311.24
+        },
+        {
+          "categoria": "COCINA",
+          "real": 68261.92
+        },
+        {
+          "categoria": "OTROS LIMPIADORES",
+          "real": 57987.36
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 30927.879999999997
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 8729.69
+        }
+      ],
+      "objetivo_titular_excel": null,
+      "titular_cambio": false,
+      "ranking": 16
+    },
+    {
+      "codigo": "29",
+      "nombre": "Camila Navarrete",
+      "supervisor": "JOHANA VIGIL",
+      "objetivo": null,
+      "real": 4219609.380000004,
+      "tendencia_cierre": 4411409.80636364,
+      "avance_pct": null,
+      "desviacion_pct": null,
+      "promedio_diario": 191800.42636363654,
+      "media_necesaria": null,
+      "clientes_con_compra": 41,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 2186431.5900000003
+        },
+        {
+          "categoria": "SELTON",
+          "real": 730469.84
+        },
+        {
+          "categoria": "PISO",
+          "real": 609187.8999999998
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 385453.44000000006
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 121568.49
+        },
+        {
+          "categoria": "BAÑO",
+          "real": 102732.47000000002
+        },
+        {
+          "categoria": "COCINA",
+          "real": 73651.02
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 10114.630000000001
+        }
+      ],
+      "objetivo_titular_excel": null,
+      "titular_cambio": false,
+      "ranking": 17
+    },
+    {
+      "codigo": "76",
+      "nombre": "Martin Di Giorno",
+      "supervisor": "Bruno Centurion",
+      "objetivo": null,
+      "real": 11861002.47999999,
+      "tendencia_cierre": 12400138.956363624,
+      "avance_pct": null,
+      "desviacion_pct": null,
+      "promedio_diario": 539136.4763636359,
+      "media_necesaria": null,
+      "clientes_con_compra": 5,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 10737672.899999999
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 584716.3
+        },
+        {
+          "categoria": "PISO",
+          "real": 467843.24
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 45463.94
+        },
+        {
+          "categoria": "COCINA",
+          "real": 25306.1
+        }
+      ],
+      "objetivo_titular_excel": null,
+      "titular_cambio": false,
+      "ranking": 18
+    },
+    {
+      "codigo": "30",
+      "nombre": "Oriana Sorgini",
+      "supervisor": "JOHANA VIGIL",
+      "objetivo": null,
+      "real": 3927640.3600000013,
+      "tendencia_cierre": 4106169.4672727287,
+      "avance_pct": null,
+      "desviacion_pct": null,
+      "promedio_diario": 178529.10727272733,
+      "media_necesaria": null,
+      "clientes_con_compra": 28,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 2197667.7299999995
+        },
+        {
+          "categoria": "PISO",
+          "real": 810555.379999999
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 473534.37
+        },
+        {
+          "categoria": "BAÑO",
+          "real": 161452.71
+        },
+        {
+          "categoria": "MORTIMER",
+          "real": 129414.84999999999
+        },
+        {
+          "categoria": "OTROS LIMPIADORES",
+          "real": 111443.9
+        },
+        {
+          "categoria": "COCINA",
+          "real": 28741.86
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 14829.56
+        }
+      ],
+      "objetivo_titular_excel": null,
+      "titular_cambio": false,
+      "ranking": 19
+    },
+    {
+      "codigo": "18",
+      "nombre": "VENDEDOR MAYORISTA",
+      "supervisor": "",
+      "objetivo": null,
+      "real": 179795.72,
+      "tendencia_cierre": 187968.25272727272,
+      "avance_pct": null,
+      "desviacion_pct": null,
+      "promedio_diario": 8172.532727272727,
+      "media_necesaria": null,
+      "clientes_con_compra": 1,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 179795.72
+        }
+      ],
+      "objetivo_titular_excel": null,
+      "titular_cambio": false,
+      "ranking": 20
+    },
+    {
+      "codigo": "24",
+      "nombre": "Gian Franco Provenza",
+      "supervisor": "JOHANA VIGIL",
+      "objetivo": null,
+      "real": 1021073.6000000003,
+      "tendencia_cierre": 1067486.0363636366,
+      "avance_pct": null,
+      "desviacion_pct": null,
+      "promedio_diario": 46412.43636363638,
+      "media_necesaria": null,
+      "clientes_con_compra": 6,
+      "categorias": [
+        {
+          "categoria": "LAVANDINA",
+          "real": 482748.26000000007
+        },
+        {
+          "categoria": "PISO",
+          "real": 244345.06999999995
+        },
+        {
+          "categoria": "LAVADO DE ROPA",
+          "real": 137060.59
+        },
+        {
+          "categoria": "AERO POETT",
+          "real": 88977.41
+        },
+        {
+          "categoria": "OTROS LIMPIADORES",
+          "real": 42074.6
+        },
+        {
+          "categoria": "COCINA",
+          "real": 25867.67
+        }
+      ],
+      "objetivo_titular_excel": null,
+      "titular_cambio": false,
+      "ranking": 21
+    },
+    {
+      "codigo": "50",
+      "nombre": "GUILLERMO ZEBALLOS",
+      "supervisor": "",
+      "objetivo": null,
+      "real": 5948292.48,
+      "tendencia_cierre": 6218669.410909091,
+      "avance_pct": null,
+      "desviacion_pct": null,
+      "promedio_diario": 270376.9309090909,
+      "media_necesaria": null,
+      "clientes_con_compra": 1,
+      "categorias": [
+        {
+          "categoria": "PISO",
+          "real": 5948292.48
+        }
+      ],
+      "objetivo_titular_excel": null,
+      "titular_cambio": false,
+      "ranking": 22
+    }
+  ]
+}</script>
+<script>
+const DATA = JSON.parse(document.getElementById('report-data').textContent);
+
+function fmtMoney(v) {
+  if (v === null || v === undefined) return '—';
+  return '$' + Math.round(v).toLocaleString('es-AR');
+}
+function fmtPct(v) {
+  if (v === null || v === undefined) return '—';
+  return (v * 100).toFixed(1) + '%';
+}
+function statusClass(avance) {
+  if (avance === null || avance === undefined) return 'gray';
+  if (avance >= 1.0) return 'green';
+  if (avance >= 0.9) return 'amber';
+  return 'red';
+}
+
+const fechaDatos = DATA.fecha_datos_al ? new Date(DATA.fecha_datos_al + 'T00:00:00').toLocaleDateString('es-AR') : '—';
+document.getElementById('subtitle').textContent =
+  'Generado ' + new Date(DATA.generado).toLocaleString('es-AR') + ' · Período: ' + DATA.periodo +
+  ' · Venta real actualizada al ' + fechaDatos + ' (fuente: ' + (DATA.fuente_ventas || '—') + ')';
+
+const sinObj = DATA.vendedores_sin_objetivo || [];
+if (sinObj.length) {
+  document.getElementById('warnBanner').innerHTML =
+    `<div class="warn-banner">⚠️ ${sinObj.length} vendedor(es) sin objetivo cargado todavía (se muestran igual, con Avance % en blanco): ${sinObj.join(', ')}.</div>`;
+}
+
+const kpis = document.getElementById('kpis');
+const t = DATA.totales;
+const kpiDefs = [
+  ['Objetivo total', fmtMoney(t.objetivo), ''],
+  ['Real (Facturación)', fmtMoney(t.real), statusClass(t.avance_pct)],
+  ['Estimado al cierre', fmtMoney(t.estimado_cierre), statusClass(t.objetivo ? t.estimado_cierre / t.objetivo : null)],
+  ['Avance %', fmtPct(t.avance_pct), statusClass(t.avance_pct)],
+  ['Clientes con compra', t.clientes_con_compra.toLocaleString('es-AR'), ''],
+];
+const cardStatusMap = { green: 'st-green', amber: 'st-amber', red: 'st-red', gray: '' };
+kpiDefs.forEach(([label, value, cls]) => {
+  const div = document.createElement('div');
+  div.className = 'card ' + (cardStatusMap[cls] || '');
+  div.innerHTML = `<div class="label">${label}</div><div class="value ${cls}">${value}</div>`;
+  kpis.appendChild(div);
+});
+
+const bars = document.getElementById('bars');
+const maxVal = Math.max(t.objetivo, t.real, t.estimado_cierre) || 1;
+function bar(label, val, color) {
+  const pct = Math.min(100, (val / maxVal) * 100);
+  return `<div style="margin-bottom:14px;">
+    <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px;">
+      <span>${label}</span><span class="mono">${fmtMoney(val)}</span>
+    </div>
+    <div style="background:#eef0f3;border-radius:6px;height:10px;overflow:hidden;">
+      <div style="width:${pct}%;background:${color};height:100%;"></div>
+    </div>
+  </div>`;
+}
+bars.innerHTML =
+  bar('Objetivo', t.objetivo, '#8b93a3') +
+  bar('Real', t.real, statusClass(t.avance_pct) === 'green' ? '#1a8a4c' : statusClass(t.avance_pct) === 'amber' ? '#b3720b' : '#c8341f') +
+  bar('Estimado al cierre', t.estimado_cierre, '#3ab6a8');
+
+const clock = document.getElementById('clock');
+const restantes = DATA.dias_habiles_restantes;
+const totales = DATA.dias_habiles_totales;
+const transcurridos = DATA.dias_habiles_transcurridos;
+const frac = totales ? transcurridos / totales : 0;
+const R = 54, C = 2 * Math.PI * R;
+const dash = C * frac;
+clock.innerHTML = `
+  <svg width="140" height="140" viewBox="0 0 140 140">
+    <circle cx="70" cy="70" r="${R}" fill="none" stroke="#eef0f3" stroke-width="14"/>
+    <circle cx="70" cy="70" r="${R}" fill="none" stroke="#3ab6a8" stroke-width="14"
+      stroke-dasharray="${dash} ${C - dash}" stroke-linecap="round"
+      transform="rotate(-90 70 70)"/>
+    <text x="70" y="66" text-anchor="middle" font-size="30" font-weight="800" fill="#1C2B3A">${restantes}</text>
+    <text x="70" y="86" text-anchor="middle" font-size="10" fill="#767a82">restantes</text>
+  </svg>
+  <div class="clock-num"><div class="n">${transcurridos}</div><div class="l">días hábiles<br>transcurridos</div></div>
+  <div class="clock-num"><div class="n">${totales}</div><div class="l">días hábiles<br>en el mes</div></div>
+`;
+
+const tbody = document.getElementById('tbody');
+let sortKey = 'ranking', sortAsc = true;
+
+function categoryRows(v) {
+  const total = v.categorias.reduce((s, c) => s + c.real, 0) || 1;
+  return v.categorias.map(c => {
+    const pct = (c.real / total) * 100;
+    return `<div class="catbar"><span>${c.categoria}</span><span class="mono">${fmtMoney(c.real)} (${pct.toFixed(0)}%)</span></div>
+      <div class="catbar-bg"><div class="catbar-fill" style="width:${pct}%"></div></div>`;
+  }).join('');
+}
+
+function vendorDetail(v) {
+  let helpMsg, helpCls;
+  if (v.objetivo === null || v.objetivo === undefined) {
+    helpMsg = '⚠️ Este vendedor todavía no tiene objetivo cargado — no se puede calcular el avance ni cuánto le falta.';
+    helpCls = 'warn';
+  } else {
+    const falta = (v.objetivo || 0) - (v.real || 0);
+    const cumplido = falta <= 0;
+    if (cumplido) {
+      helpMsg = `✅ Ya alcanzó el objetivo total (superó por ${fmtMoney(-falta)}).`;
+      helpCls = 'ok';
+    } else {
+      const porDiaNecesario = (restantes > 0) ? falta / restantes : 0;
+      helpMsg = `Necesita vender <b>${fmtMoney(porDiaNecesario)}/día</b> en los próximos <b>${restantes}</b> días hábiles para llegar al objetivo (le faltan ${fmtMoney(falta)}).`;
+      helpCls = '';
+    }
+  }
+  return `
+    <div class="help-box ${helpCls}">${helpMsg}</div>
+    <div style="font-size:12px;color:#767a82;margin-bottom:10px;">Supervisor: ${v.supervisor || '—'} · Código: ${v.codigo} · Promedio diario actual: <b>${fmtMoney(v.promedio_diario)}</b></div>
+    ${v.titular_cambio ? `<div class="help-box warn">ℹ️ El objetivo de este código (${v.codigo}) está cargado a nombre de <b>${v.objetivo_titular_excel}</b> en el Excel de objetivos. Se está usando igual porque el objetivo pertenece al puesto/ruta, no a la persona.</div>` : ''}
+    <div style="font-weight:600;font-size:12.5px;margin-bottom:6px;">Venta real por categoría</div>
+    ${categoryRows(v)}
+  `;
+}
+
+function render() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  let rows = DATA.vendedores.filter(v => v.nombre && v.nombre.toLowerCase().includes(q));
+  const keyFn = {
+    ranking: v => v.ranking,
+    nombre: v => v.nombre || '',
+    objetivo: v => v.objetivo || 0,
+    real: v => v.real || 0,
+    avance: v => (v.avance_pct === null || v.avance_pct === undefined) ? -1 : v.avance_pct,
+    desviacion: v => (v.desviacion_pct === null || v.desviacion_pct === undefined) ? -1 : v.desviacion_pct,
+    clientes: v => v.clientes_con_compra || 0,
+  }[sortKey];
+  rows = rows.slice().sort((a, b) => (keyFn(a) > keyFn(b) ? 1 : -1) * (sortAsc ? 1 : -1));
+
+  tbody.innerHTML = '';
+  rows.forEach(v => {
+    const cls = statusClass(v.avance_pct);
+    const tr = document.createElement('tr');
+    tr.className = 'vendor-row';
+    const desv = (v.desviacion_pct === null || v.desviacion_pct === undefined) ? '—' :
+      (v.desviacion_pct >= 0 ? '+' : '') + fmtPct(v.desviacion_pct);
+    tr.innerHTML = `
+      <td>${v.ranking}</td>
+      <td><span class="dot ${cls}"></span>${v.nombre}${v.objetivo === null ? '<span class="pill">sin objetivo</span>' : ''}${v.titular_cambio ? '<span class="pill" title="El objetivo de este código lo tenía cargado ' + v.objetivo_titular_excel + '">objetivo heredado</span>' : ''}</td>
+      <td class="right mono">${fmtMoney(v.objetivo)}</td>
+      <td class="right mono">${fmtMoney(v.real)}</td>
+      <td class="right mono">${fmtPct(v.avance_pct)}</td>
+      <td class="right mono">${desv}</td>
+      <td class="right mono">${v.clientes_con_compra}</td>
+      <td class="right"><span class="chev">▶</span></td>
+    `;
+    const detailTr = document.createElement('tr');
+    detailTr.className = 'detail-row';
+    const td = document.createElement('td');
+    td.colSpan = 8;
+    const inner = document.createElement('div');
+    inner.className = 'detail-inner';
+    inner.innerHTML = vendorDetail(v);
+    td.appendChild(inner);
+    detailTr.appendChild(td);
+
+    tr.addEventListener('click', () => {
+      inner.classList.toggle('open');
+      tr.querySelector('.chev').classList.toggle('open');
+    });
+    tbody.appendChild(tr);
+    tbody.appendChild(detailTr);
+  });
+}
+
+document.querySelectorAll('th[data-k]').forEach(th => {
+  th.addEventListener('click', () => {
+    const k = th.dataset.k;
+    if (sortKey === k) sortAsc = !sortAsc; else { sortKey = k; sortAsc = true; }
+    render();
+  });
+});
+document.getElementById('search').addEventListener('input', render);
+
+document.getElementById('footer').textContent =
+  'Se actualiza automáticamente todos los días a las 16hs a partir del CSV de ventas y los objetivos cargados en la carpeta Supervisor.';
+
+render();
+</script>
+</body>
+</html>
